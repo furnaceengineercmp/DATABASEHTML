@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pusat Data — Furnace Engineer CMP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --red:#E2231A;
+    --yellow:#FFD400;
+    --black:#111111;
+    --white:#FFFFFF;
+    --bg:#F3F2EE;
+    --line:#E2DFD6;
+    --text:#1A1A1A;
+    --muted:#6E6B63;
+    --card-shadow: 0 2px 0 rgba(0,0,0,0.06);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Inter',sans-serif;
+    min-height:100vh;
+  }
+
+  /* ---------- CHEVRON STRIPE (signature element) ---------- */
+  .stripe{
+    display:flex;
+    height:10px;
+    width:100%;
+  }
+  .stripe .seg{height:100%;}
+  .stripe .seg.r{background:var(--red); flex:1.4;}
+  .stripe .seg.y{background:var(--yellow); flex:1.4;}
+  .stripe .seg.chev{
+    background:var(--black);
+    flex:0.9;
+    clip-path: polygon(0 0, 85% 0, 100% 50%, 85% 100%, 0 100%, 15% 50%);
+  }
+
+  /* ---------- HEADER ---------- */
+  header{
+    background:var(--black);
+    color:var(--white);
+    padding:28px 6vw 24px;
+    position:relative;
+    overflow:hidden;
+  }
+  .eyebrow{
+    font-family:'Oswald',sans-serif;
+    text-transform:uppercase;
+    letter-spacing:.22em;
+    font-size:12px;
+    color:var(--yellow);
+    margin:0 0 10px;
+  }
+  h1{
+    font-family:'Archivo Black',sans-serif;
+    font-size:clamp(28px,4.4vw,48px);
+    line-height:1.02;
+    margin:0 0 8px;
+    letter-spacing:-0.01em;
+  }
+  h1 span{color:var(--red);}
+  header p.desc{
+    font-family:'Inter',sans-serif;
+    color:#C9C7C1;
+    max-width:560px;
+    font-size:14.5px;
+    margin:0;
+  }
+  .sync-row{
+    margin-top:18px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-family:'Oswald',sans-serif;
+    font-size:12px;
+    letter-spacing:.05em;
+    text-transform:uppercase;
+    color:#B9B7B0;
+  }
+  .dot{
+    width:8px;height:8px;border-radius:50%;
+    background:var(--yellow);
+    box-shadow:0 0 0 3px rgba(255,212,0,0.18);
+  }
+  .dot.live{background:#5FD16C; box-shadow:0 0 0 3px rgba(95,209,108,0.2);}
+  .dot.err{background:var(--red); box-shadow:0 0 0 3px rgba(226,35,26,0.2);}
+  #refreshBtn{
+    background:none;border:1px solid #3a3a3a;color:#D8D6D0;
+    font-family:'Oswald',sans-serif;text-transform:uppercase;letter-spacing:.05em;
+    font-size:11px;padding:6px 12px;border-radius:3px;cursor:pointer;
+    transition:.15s;
+  }
+  #refreshBtn:hover{border-color:var(--yellow); color:var(--yellow);}
+
+  /* ---------- SEARCH ---------- */
+  .search-wrap{
+    background:var(--white);
+    padding:20px 6vw;
+    border-bottom:1px solid var(--line);
+    position:sticky;
+    top:0;
+    z-index:10;
+  }
+  .search-box{
+    display:flex;
+    align-items:center;
+    max-width:640px;
+    background:var(--bg);
+    border:2px solid var(--black);
+    border-radius:2px;
+    padding:0 14px;
+    transition:.15s;
+  }
+  .search-box:focus-within{
+    border-color:var(--red);
+    box-shadow:3px 3px 0 var(--yellow);
+  }
+  .search-box svg{flex:none;}
+  .search-box input{
+    flex:1;
+    border:none;
+    background:transparent;
+    outline:none;
+    font-family:'Inter',sans-serif;
+    font-size:15px;
+    padding:12px 10px;
+    color:var(--text);
+  }
+  .search-box input::placeholder{color:var(--muted);}
+  .count-label{
+    font-family:'Oswald',sans-serif;
+    font-size:12px;
+    letter-spacing:.04em;
+    text-transform:uppercase;
+    color:var(--muted);
+    margin-top:10px;
+  }
+  .count-label b{color:var(--red);}
+
+  /* ---------- GRID ---------- */
+  main{padding:32px 6vw 60px;}
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(272px,1fr));
+    gap:18px;
+  }
+
+  .card{
+    background:var(--white);
+    border:1px solid var(--line);
+    box-shadow:var(--card-shadow);
+    padding:20px 20px 18px;
+    position:relative;
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0 100%);
+    transition:transform .15s, box-shadow .15s;
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+  }
+  .card:hover{
+    transform:translate(-2px,-2px);
+    box-shadow:5px 5px 0 var(--yellow), 5px 5px 0 1px var(--black);
+  }
+  .card .tag{
+    width:26px;height:5px;background:var(--red);
+  }
+  .card h3{
+    font-family:'Oswald',sans-serif;
+    font-weight:600;
+    font-size:17px;
+    line-height:1.28;
+    margin:0;
+    color:var(--text);
+  }
+  .card .links{
+    margin-top:auto;
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+  }
+  .card a.linkbtn{
+    text-decoration:none;
+    font-family:'Oswald',sans-serif;
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:.04em;
+    padding:8px 12px;
+    border-radius:2px;
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    transition:.15s;
+  }
+  .card a.html{
+    background:var(--black); color:var(--white);
+  }
+  .card a.html:hover{background:var(--red);}
+  .card a.sheet{
+    background:var(--bg); color:var(--text); border:1px solid var(--line);
+  }
+  .card a.sheet:hover{border-color:var(--yellow); background:#FFF8DB;}
+
+  /* ---------- STATES ---------- */
+  .state{
+    padding:60px 20px;
+    text-align:center;
+    font-family:'Oswald',sans-serif;
+    color:var(--muted);
+  }
+  .state .big{
+    font-family:'Archivo Black',sans-serif;
+    color:var(--text);
+    font-size:20px;
+    margin-bottom:8px;
+    text-transform:none;
+  }
+  .state.error .big{color:var(--red);}
+  .state a.retry{
+    display:inline-block;margin-top:16px;
+    background:var(--black);color:var(--white);
+    padding:10px 18px;border-radius:2px;
+    text-decoration:none;font-size:12px;letter-spacing:.05em;text-transform:uppercase;
+    cursor:pointer;
+  }
+  code{
+    background:#EFEDE6;padding:2px 6px;border-radius:3px;font-size:12px;
+  }
+
+  @media (max-width:520px){
+    header{padding:24px 5vw 20px;}
+    .search-wrap, main{padding-left:5vw;padding-right:5vw;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <p class="eyebrow">Furnace Engineer CMP</p>
+  <h1>Pusat Data <span>Link</span></h1>
+  <p class="desc">Satu pintu ke semua database &amp; dashboard tim. Klik kartu untuk langsung menuju halaman HTML atau spreadsheet-nya.</p>
+  <div class="sync-row">
+    <span class="dot" id="statusDot"></span>
+    <span id="statusText">Menyambungkan ke Google Sheet…</span>
+    <button id="refreshBtn">↻ Refresh</button>
+  </div>
+</header>
+<div class="stripe"><div class="seg r"></div><div class="seg y"></div><div class="seg chev"></div></div>
+
+<div class="search-wrap">
+  <div class="search-box">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2.2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <input type="text" id="searchInput" placeholder="Cari nama link, mis: KPI, packaging, ladle…" autocomplete="off">
+  </div>
+  <p class="count-label" id="countLabel">Memuat data…</p>
+</div>
+
+<main>
+  <div id="content">
+    <div class="state" id="loadingState">
+      <div class="big">Mengambil data dari spreadsheet…</div>
+      <div>Mohon tunggu sebentar</div>
+    </div>
+  </div>
+</main>
+
+<script>
+const SHEET_URL = 'https://script.google.com/macros/s/AKfycbzXjKRztLK0BOQvLbg696FdQzpf4egSd7vx7krHY7WuEypGxFIG4CUZq9TxgWCEV8g/exec';
+
+let allItems = [];
+
+const contentEl = document.getElementById('content');
+const statusDot = document.getElementById('statusDot');
+const statusText = document.getElementById('statusText');
+const countLabel = document.getElementById('countLabel');
+const searchInput = document.getElementById('searchInput');
+const refreshBtn = document.getElementById('refreshBtn');
+
+function setStatus(mode, text){
+  statusDot.className = 'dot' + (mode ? ' ' + mode : '');
+  statusText.textContent = text;
+}
+
+function escapeHtml(str){
+  return String(str || '').replace(/[&<>"']/g, m => ({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+  }[m]));
+}
+
+function iconLink(kind){
+  return kind === 'html'
+    ? '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M10 13a5 5 0 0 0 7 7l1.5-1.5a5 5 0 0 0-7-7"/><path d="M14 11a5 5 0 0 0-7-7L5.5 5.5a5 5 0 0 0 7 7"/></svg>'
+    : '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M3 3h18v18H3z"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg>';
+}
+
+function render(items){
+  if(!items.length){
+    contentEl.innerHTML = `<div class="state"><div class="big">Tidak ada hasil</div><div>Coba kata kunci lain.</div></div>`;
+    return;
+  }
+  contentEl.innerHTML = `<div class="grid">` + items.map(item => {
+    const htmlBtn = item.linkHtml
+      ? `<a class="linkbtn html" href="${escapeHtml(item.linkHtml)}" target="_blank" rel="noopener">${iconLink('html')} Buka HTML</a>` : '';
+    const sheetBtn = item.linkSheet
+      ? `<a class="linkbtn sheet" href="${escapeHtml(item.linkSheet)}" target="_blank" rel="noopener">${iconLink('sheet')} Datasheet</a>` : '';
+    return `
+      <div class="card">
+        <div class="tag"></div>
+        <h3>${escapeHtml(item.desc)}</h3>
+        <div class="links">${htmlBtn}${sheetBtn}</div>
+      </div>`;
+  }).join('') + `</div>`;
+}
+
+function applyFilter(){
+  const q = searchInput.value.trim().toLowerCase();
+  const filtered = q
+    ? allItems.filter(i => i.desc.toLowerCase().includes(q))
+    : allItems;
+  countLabel.innerHTML = `Menampilkan <b>${filtered.length}</b> dari ${allItems.length} link`;
+  render(filtered);
+}
+
+async function loadData(){
+  setStatus('', 'Menyambungkan ke Google Sheet…');
+  contentEl.innerHTML = `<div class="state"><div class="big">Mengambil data dari spreadsheet…</div><div>Mohon tunggu sebentar</div></div>`;
+  try{
+    const res = await fetch(SHEET_URL);
+    if(!res.ok) throw new Error('HTTP ' + res.status);
+    const rows = await res.json(); // Apps Script mengembalikan array JSON langsung
+
+    allItems = rows
+      .map(r => ({
+        desc: r.desc ? String(r.desc).trim() : '',
+        linkHtml: r.linkHtml ? String(r.linkHtml).trim() : '',
+        linkSheet: r.linkSheet ? String(r.linkSheet).trim() : ''
+      }))
+      .filter(item => item.desc && (item.linkHtml || item.linkSheet));
+
+    setStatus('live', `Tersambung · ${allItems.length} link · update terakhir ${new Date().toLocaleTimeString('id-ID')}`);
+    applyFilter();
+  }catch(err){
+    setStatus('err', 'Gagal mengambil data');
+    contentEl.innerHTML = `
+      <div class="state error">
+        <div class="big">Tidak bisa memuat data dari Google Sheet</div>
+        <div>Pastikan deployment Apps Script masih aktif dengan akses <code>Anyone</code>, lalu buka file ini lewat server lokal (bukan langsung dobel-klik file), kemudian tekan Refresh.</div>
+        <a class="retry" id="retryBtn">↻ Coba lagi</a>
+      </div>`;
+    document.getElementById('retryBtn').addEventListener('click', loadData);
+    countLabel.textContent = 'Gagal memuat data';
+  }
+}
+
+searchInput.addEventListener('input', applyFilter);
+refreshBtn.addEventListener('click', loadData);
+
+loadData();
+// auto-refresh tiap 2 menit biar data selalu update tanpa perlu reload manual
+setInterval(loadData, 120000);
+</script>
+
+</body>
+</html>
